@@ -4,7 +4,21 @@ require('dotenv').config();
 const path = require('path');
 const app = express();
 
-app.use(cors());
+// ✅ CORS Configuration
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://cedurbanmain.onrender.com', // Replace with your real Netlify URL
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    return callback(new Error('CORS policy: Not allowed by CORS'));
+  },
+  credentials: true,
+}));
 
 // 🛠 Ensure JSON and plain text are accepted (important for `fetch`)
 app.use(express.json({ type: ['application/json', 'text/plain'] }));
@@ -50,3 +64,10 @@ app.use('/api/cell-group-promotion-rules', require('./routes/promotionRuleRoutes
 app.get('/', (req, res) => res.send('RBAC + Membership Backend Running ✅'));
 
 module.exports = app;
+
+
+
+
+
+
+
