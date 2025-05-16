@@ -1,12 +1,24 @@
-// server/app.js
 const express = require('express');
-const cors    = require('cors');
+const cors = require('cors');
 require('dotenv').config();
-const path    = require('path');
-
+const path = require('path');
 const app = express();
 
-app.use(cors());
+// ✅ CORS Configuration
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://cedurbanmain-3f71.onrender.com', // Replace with your real Netlify URL
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    return callback(new Error('CORS policy: Not allowed by CORS'));
+  },
+  credentials: true,
+}));
 
 // Accept JSON and plain text for fetch
 app.use(express.json({ type: ['application/json', 'text/plain'] }));
