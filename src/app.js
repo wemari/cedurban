@@ -6,7 +6,21 @@ const path    = require('path');
 
 const app = express();
 
-app.use(cors());
+// ✅ CORS Configuration
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://cedurbanzone.onrender.com', // Replace with your real frontend URL(s)
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    return callback(new Error('CORS policy: Not allowed by CORS'));
+  },
+  credentials: true,
+}));
 
 // Accept JSON and plain text for fetch
 app.use(express.json({ type: ['application/json', 'text/plain'] }));
